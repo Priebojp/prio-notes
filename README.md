@@ -8,7 +8,7 @@ and an Android app with a home-screen widget.
 ## Layout
 
 - `server/` — Laravel 13 + Livewire 4 + Flux (web UI for PC, later the API for mobile)
-- `mobile/` — NativePHP Android app (phase 5, not created yet)
+- `mobile/` — NativePHP Android app talking to the server API (see `mobile/README.md`)
 
 ## Local development
 
@@ -68,5 +68,5 @@ All priority changes go through `App\Services\PriorityBoard`:
 2. ✅ Time tracking (one running timer, manual entries, weekly/monthly report)
 3. ✅ Meetings: record/upload → transcribe (ElevenLabs Scribe, sk/cs) → minutes + suggested tasks (Claude)
 4. ✅ Daily e-mail digest (per-user time, weekends optional; `digest:send` runs every minute, sends once a day)
-5. NativePHP Android app (tasks, timer, recording)
+5. ✅ NativePHP Android app (urgent list, timer, quick add, meeting recording)
 6. Home-screen widget
