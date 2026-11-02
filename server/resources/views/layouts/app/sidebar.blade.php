@@ -17,6 +17,9 @@
                 <flux:sidebar.item icon="queue-list" :href="route('board')" :current="request()->routeIs('board')" wire:navigate>
                     Priority
                 </flux:sidebar.item>
+                <flux:sidebar.item icon="microphone" :href="route('meetings.index')" :current="request()->routeIs('meetings.*')" wire:navigate>
+                    Porady
+                </flux:sidebar.item>
                 <flux:sidebar.item icon="clock" :href="route('time')" :current="request()->routeIs('time')" wire:navigate>
                     Čas
                 </flux:sidebar.item>

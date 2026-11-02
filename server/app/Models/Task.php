@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $user_id
  * @property int|null $project_id
+ * @property int|null $meeting_id
  * @property string $title
  * @property string|null $notes
  * @property Carbon|null $due_date
@@ -25,7 +26,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $completed_at
  * @property int|string|null $tracked_seconds only with scopeWithTrackedTime()
  */
-#[Fillable(['project_id', 'title', 'notes', 'due_date', 'estimate_minutes'])]
+#[Fillable(['project_id', 'meeting_id', 'title', 'notes', 'due_date', 'estimate_minutes'])]
 class Task extends Model
 {
     /** @use HasFactory<TaskFactory> */
@@ -59,6 +60,12 @@ class Task extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    /** @return BelongsTo<Meeting, $this> */
+    public function meeting(): BelongsTo
+    {
+        return $this->belongsTo(Meeting::class);
     }
 
     /** @return HasMany<TimeEntry, $this> */

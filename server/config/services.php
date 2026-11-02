@@ -28,6 +28,19 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // Speech-to-text for meeting recordings
+    'elevenlabs' => [
+        'key' => env('ELEVENLABS_API_KEY'),
+        'stt_model' => env('ELEVENLABS_STT_MODEL', 'scribe_v2'),
+    ],
+
+    // Meeting minutes + action items
+    'anthropic' => [
+        'key' => env('ANTHROPIC_API_KEY'),
+        'model' => env('ANTHROPIC_MODEL', 'claude-opus-5-5'),
+        'effort' => env('ANTHROPIC_EFFORT', 'medium'),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

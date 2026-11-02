@@ -26,6 +26,24 @@ Composer credentials before the first deploy).
 
 Tests: `./vendor/bin/pest` · static analysis: `./vendor/bin/phpstan analyse`
 
+## Meetings
+
+Recording (browser `MediaRecorder` or uploaded file) → `TranscribeMeeting` job (ElevenLabs
+Scribe with diarization) → `SummarizeMeeting` job (Claude via the official PHP SDK, structured
+output: minutes, decisions, open questions, suggested tasks). Suggestions become tasks only
+after the user accepts them, through the same priority rules as everything else.
+Recordings are deleted after `MEETINGS_AUDIO_RETENTION_DAYS` (`meetings:prune-audio`, daily).
+
+Needs `ELEVENLABS_API_KEY` and `ANTHROPIC_API_KEY` in `.env`, a running queue worker and the scheduler.
+
+## Deploying on Forge
+
+- Web directory `/server/public`; deploy script runs in `server/` (`cd server` first)
+- Composer credentials for `composer.fluxui.dev` (Flux Pro)
+- Queue worker: `database` connection, timeout ≥ 1200 s (long recordings); keep `DB_QUEUE_RETRY_AFTER` above it
+- Scheduler enabled (`php artisan schedule:run` every minute)
+- Uploads: PHP `upload_max_filesize` / `post_max_size` and nginx `client_max_body_size` ≥ `MEETINGS_MAX_UPLOAD_MB`
+
 ## Priority rules
 
 All priority changes go through `App\Services\PriorityBoard`:
@@ -40,7 +58,7 @@ All priority changes go through `App\Services\PriorityBoard`:
 
 1. ✅ Companies, projects, tasks, priority board
 2. ✅ Time tracking (one running timer, manual entries, weekly/monthly report)
-3. Meetings: record → transcribe (ElevenLabs Scribe, sk/cs) → minutes + suggested tasks (Claude)
+3. ✅ Meetings: record/upload → transcribe (ElevenLabs Scribe, sk/cs) → minutes + suggested tasks (Claude)
 4. Daily e-mail digest
 5. NativePHP Android app (tasks, timer, recording)
 6. Home-screen widget
