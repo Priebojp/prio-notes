@@ -3,7 +3,7 @@
 #
 # Forge deploy script (Site → Deployments → Deploy script):
 #
-#   cd /home/forge/note.prieboj.sk
+#   cd /home/forge/notes.prieboj.sk
 #   git pull origin $FORGE_SITE_BRANCH
 #   bash deploy/forge-deploy.sh
 #

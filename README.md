@@ -46,26 +46,26 @@ and `MAIL_FROM_ADDRESS`.
 
 ## Deploying on Forge
 
-Site `note.prieboj.sk` (Laravel, standard deployments). The app lives in `server/`:
+Site `notes.prieboj.sk` (Laravel, standard deployments). The app lives in `server/`:
 
 - **Web directory**: `/server/public` (or, if the site has a *root directory* setting, root `/server` + web `/public`)
 - **Composer credentials** (Settings → Composer): `composer.fluxui.dev`, your Flux account e-mail + license key
 - **Deploy script**:
   ```bash
-  cd /home/forge/note.prieboj.sk
+  cd /home/forge/notes.prieboj.sk
   git pull origin $FORGE_SITE_BRANCH
   bash deploy/forge-deploy.sh
   ```
   (`deploy/forge-deploy.sh` installs, builds assets, migrates, caches, restarts queue + FPM)
 - **Environment** (Settings → Environment): production values, see `server/.env.example`;
   set `REGISTRATION_ENABLED=true` only until you have registered your account
-  (`APP_URL=https://note.prieboj.sk`, `APP_ENV=production`, `APP_DEBUG=false`, MySQL `DB_*`,
+  (`APP_URL=https://notes.prieboj.sk`, `APP_ENV=production`, `APP_DEBUG=false`, MySQL `DB_*`,
   SMTP `MAIL_*`, `ELEVENLABS_API_KEY`, `ANTHROPIC_API_KEY`, `DB_QUEUE_RETRY_AFTER=1300`)
 - **Queue worker** (Processes → background process): working directory
-  `/home/forge/note.prieboj.sk/server`, command
+  `/home/forge/notes.prieboj.sk/server`, command
   `php8.4 artisan queue:work database --timeout=1200 --tries=2 --sleep=3`
 - **Scheduler** (Processes → Scheduler, every minute):
-  `php8.4 /home/forge/note.prieboj.sk/server/artisan schedule:run`
+  `php8.4 /home/forge/notes.prieboj.sk/server/artisan schedule:run`
 - **Uploads**: server → Runtime → PHP → max file upload size ≥ `MEETINGS_MAX_UPLOAD_MB` (300 MB);
   check the site's nginx config has a matching `client_max_body_size`
 - **SSL**: Let's Encrypt certificate for the domain (the phone app requires https)

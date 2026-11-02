@@ -16,7 +16,7 @@ return [
 
     // The Prio Notes server this app talks to (default; changeable on the login screen)
     'prio' => [
-        'url' => env('PRIO_SERVER_URL', 'https://note.prieboj.sk'),
+        'url' => env('PRIO_SERVER_URL', 'https://notes.prieboj.sk'),
     ],
 
     'postmark' => [
