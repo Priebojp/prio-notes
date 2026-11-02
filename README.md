@@ -36,6 +36,14 @@ Recordings are deleted after `MEETINGS_AUDIO_RETENTION_DAYS` (`meetings:prune-au
 
 Needs `ELEVENLABS_API_KEY` and `ANTHROPIC_API_KEY` in `.env`, a running queue worker and the scheduler.
 
+## Daily e-mail
+
+`App\Digest\DigestBuilder` collects what is due (same ranking as the dashboard), upcoming
+deadlines, meetings with unreviewed suggestions and yesterday's tracked time; `digest:send`
+mails it once a day after each user's chosen time (Settings → Denný e-mail, with a test button).
+Locally mail goes to the log (`MAIL_MAILER=log`); in production set the SMTP `MAIL_*` variables
+and `MAIL_FROM_ADDRESS`.
+
 ## Deploying on Forge
 
 - Web directory `/server/public`; deploy script runs in `server/` (`cd server` first)
@@ -59,6 +67,6 @@ All priority changes go through `App\Services\PriorityBoard`:
 1. ✅ Companies, projects, tasks, priority board
 2. ✅ Time tracking (one running timer, manual entries, weekly/monthly report)
 3. ✅ Meetings: record/upload → transcribe (ElevenLabs Scribe, sk/cs) → minutes + suggested tasks (Claude)
-4. Daily e-mail digest
+4. ✅ Daily e-mail digest (per-user time, weekends optional; `digest:send` runs every minute, sends once a day)
 5. NativePHP Android app (tasks, timer, recording)
 6. Home-screen widget

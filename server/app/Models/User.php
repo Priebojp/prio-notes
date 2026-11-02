@@ -28,13 +28,24 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property bool $digest_enabled
+ * @property string $digest_time HH:MM
+ * @property bool $digest_weekends
+ * @property Carbon|null $digest_last_sent_on
  */
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'digest_enabled', 'digest_time', 'digest_weekends'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
+
+    /** Mirrors the column defaults so new, unsaved-then-unrefreshed users behave the same. */
+    protected $attributes = [
+        'digest_enabled' => true,
+        'digest_time' => '07:00',
+        'digest_weekends' => false,
+    ];
 
     /**
      * Get the attributes that should be cast.
@@ -46,6 +57,9 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'digest_enabled' => 'boolean',
+            'digest_weekends' => 'boolean',
+            'digest_last_sent_on' => 'date',
         ];
     }
 

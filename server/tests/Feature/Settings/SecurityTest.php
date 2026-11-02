@@ -41,7 +41,7 @@ class SecurityTest extends TestCase
 
         $response->assertSee('Passkeys');
         $response->assertSee('No passkeys yet');
-        $response->assertSee('Two-factor authentication');
+        $response->assertSee('Dvojfaktorové overenie');
         $response->assertSee('Enable 2FA');
     }
 
@@ -65,7 +65,7 @@ class SecurityTest extends TestCase
             ->withSession(['auth.password_confirmed_at' => time()])
             ->get(route('security.edit'))
             ->assertOk()
-            ->assertSee('Update password')
+            ->assertSee('Zmeniť heslo')
             ->assertDontSee('Manage your passkeys for passwordless sign-in')
             ->assertDontSee('Add a passkey to sign in without a password')
             ->assertDontSee('Two-factor authentication');
