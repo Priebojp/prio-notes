@@ -87,4 +87,4 @@ All priority changes go through `App\Services\PriorityBoard`:
 3. ✅ Meetings: record/upload → transcribe (ElevenLabs Scribe, sk/cs) → minutes + suggested tasks (Claude)
 4. ✅ Daily e-mail digest (per-user time, weekends optional; `digest:send` runs every minute, sends once a day)
 5. ✅ NativePHP Android app (urgent list, timer, quick add, meeting recording)
-6. Home-screen widget
+6. ✅ Android home-screen widget (local NativePHP plugin `mobile/packages/prio-widget`)

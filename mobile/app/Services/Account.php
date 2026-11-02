@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Native\Mobile\Facades\SecureStorage;
+use Prieboj\PrioWidget\PrioWidget;
 use Throwable;
 
 /**
@@ -60,6 +61,8 @@ class Account
         }
 
         $this->put('token', $stored ? null : Crypt::encryptString($token));
+
+        PrioWidget::configure($this->serverUrl(), $token);
     }
 
     public function signOut(): void
@@ -71,6 +74,8 @@ class Account
 
         $this->put('token', null);
         $this->put('user_name', null);
+
+        PrioWidget::configure($this->serverUrl(), null);
     }
 
     private function get(string $key): ?string

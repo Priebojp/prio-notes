@@ -14,7 +14,8 @@
         "laravel/tinker": "^3.0",
         "livewire/livewire": "^4.4",
         "nativephp/mobile": "^4.7",
-        "nativephp/mobile-microphone": "^1.2"
+        "nativephp/mobile-microphone": "^1.2",
+        "prieboj/prio-widget": "@dev"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -90,5 +91,10 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [{
+        "name": "prio-widget",
+        "type": "path",
+        "url": "packages/prio-widget"
+    }]
 }

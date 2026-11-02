@@ -8,6 +8,7 @@ use App\Services\PrioApi;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Prieboj\PrioWidget\PrioWidget;
 use RuntimeException;
 
 /** What is most urgent right now; complete, time and quick-add tasks. */
@@ -37,8 +38,12 @@ class Now extends Component
 
     public ?string $error = null;
 
-    public function mount(): void
+    public function mount(Account $account): void
     {
+        // Hands the token to the home-screen widget (also for installs signed in
+        // before the widget existed); this refreshes the widget too.
+        PrioWidget::configure($account->serverUrl(), $account->token());
+
         $this->load();
     }
 
@@ -51,7 +56,7 @@ class Now extends Component
             $this->running = $data['running'];
             $this->capacity = $data['capacity'];
             $this->error = null;
-        });
+        }, changesTasks: false);
     }
 
     public function complete(int $id): void
@@ -114,10 +119,15 @@ class Now extends Component
         return view('livewire.now', ['userName' => $account->userName()])->title('Teraz');
     }
 
-    private function attempt(callable $call): void
+    /** Runs an API call; changes (not plain reloads) also refresh the home-screen widget. */
+    private function attempt(callable $call, bool $changesTasks = true): void
     {
         try {
             $call();
+
+            if ($changesTasks) {
+                PrioWidget::refresh();
+            }
         } catch (ApiConflict $e) {
             $this->conflict = $e->payload;
         } catch (RuntimeException $e) {

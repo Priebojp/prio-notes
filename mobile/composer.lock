@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3c4bd604335c67727be3c5b56b39c10f",
+    "content-hash": "47ad97677aee741141574273282b16ac",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3077,6 +3077,42 @@
                 }
             ],
             "time": "2026-08-24T00:54:40+00:00"
+        },
+        {
+            "name": "prieboj/prio-widget",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/prio-widget",
+                "reference": "e4f017abd65b46833ddb0d5218d1e49cb243c169"
+            },
+            "require": {
+                "nativephp/mobile": "^4.0",
+                "php": "^8.3"
+            },
+            "type": "nativephp-plugin",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Prieboj\\PrioWidget\\PrioWidgetServiceProvider"
+                    ]
+                },
+                "nativephp": {
+                    "manifest": "nativephp.json"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Prieboj\\PrioWidget\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Android home-screen widget for Prio Notes: shows what is most urgent right now",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "psr/clock",
@@ -10724,7 +10760,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "prieboj/prio-widget": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

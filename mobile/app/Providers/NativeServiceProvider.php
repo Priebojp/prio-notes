@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Native\Mobile\Providers\MicrophoneServiceProvider;
+use Prieboj\PrioWidget\PrioWidgetServiceProvider;
 
 class NativeServiceProvider extends ServiceProvider
 {
@@ -36,6 +37,7 @@ class NativeServiceProvider extends ServiceProvider
     {
         return [
             MicrophoneServiceProvider::class,
+            PrioWidgetServiceProvider::class,
 
         ];
     }

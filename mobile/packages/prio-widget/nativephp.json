@@ -1,0 +1,50 @@
+{
+    "namespace": "PrioWidget",
+    "bridge_functions": [
+        {
+            "name": "PrioWidget.Configure",
+            "android": "sk.prieboj.priowidget.PrioWidgetFunctions.Configure",
+            "description": "Store the server URL and API token the widget uses (null token = signed out) and refresh it"
+        },
+        {
+            "name": "PrioWidget.Refresh",
+            "android": "sk.prieboj.priowidget.PrioWidgetFunctions.Refresh",
+            "description": "Reload the widget's task list from the server"
+        }
+    ],
+    "android": {
+        "min_version": 26,
+        "permissions": [
+            "android.permission.INTERNET"
+        ],
+        "receivers": [
+            {
+                "name": "sk.prieboj.priowidget.PrioWidgetProvider",
+                "exported": true,
+                "intent_filters": [
+                    {
+                        "action": [
+                            "android.appwidget.action.APPWIDGET_UPDATE"
+                        ]
+                    }
+                ],
+                "meta_data": [
+                    {
+                        "name": "android.appwidget.provider",
+                        "resource": "@xml/prio_widget_info"
+                    }
+                ]
+            }
+        ]
+    },
+    "assets": {
+        "android": {
+            "android-res/layout/prio_widget.xml": "res/layout/prio_widget.xml",
+            "android-res/xml/prio_widget_info.xml": "res/xml/prio_widget_info.xml",
+            "android-res/drawable/prio_widget_bg.xml": "res/drawable/prio_widget_bg.xml"
+        }
+    },
+    "ios": {
+        "min_version": "18.0"
+    }
+}

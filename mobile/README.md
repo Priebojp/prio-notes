@@ -8,6 +8,15 @@ Screens: **Teraz** (urgent list, complete, timer, quick add with the
 upload for transcription). The token is kept in the OS keystore when
 `SecureStorage` is available, otherwise encrypted in the app's private database.
 
+## Home-screen widget
+
+`packages/prio-widget` is a local NativePHP plugin (Composer path repository):
+a Kotlin `AppWidgetProvider` + RemoteViews layout that shows the top 5 tasks from
+`GET /api/now`. The app hands it the server URL and token
+(`Prieboj\PrioWidget\PrioWidget::configure()`) on sign-in and on opening
+*Teraz*, and nudges it (`::refresh()`) after every change. The widget refreshes
+itself every 30 minutes and on tapping ↻; tapping elsewhere opens the app.
+
 ## Build machine setup (Linux)
 
 - Android Studio + SDK in `~/Android/Sdk` (Platform-Tools, Build-Tools, an emulator image)
