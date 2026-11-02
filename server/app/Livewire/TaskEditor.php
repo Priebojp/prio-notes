@@ -6,7 +6,11 @@ use App\Enums\Priority;
 use App\Livewire\Concerns\InteractsWithTasks;
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\TimeEntry;
+use App\Services\TimeTracker;
 use Flux\Flux;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -36,11 +40,19 @@ class TaskEditor extends Component
 
     public ?int $estimateMinutes = null;
 
+    public ?int $logMinutes = null;
+
+    public ?string $logDate = null;
+
+    public string $logNote = '';
+
     #[On('edit-task')]
     public function open(?int $id = null, ?int $projectId = null): void
     {
         $this->resetValidation();
-        $this->reset('taskId', 'title', 'notes', 'projectId', 'dueDate', 'priority', 'estimateMinutes');
+        $this->reset('taskId', 'title', 'notes', 'projectId', 'dueDate', 'priority', 'estimateMinutes', 'logMinutes', 'logNote');
+        $this->logDate = today()->toDateString();
+        unset($this->timeEntries, $this->trackedSeconds);
 
         if ($id !== null) {
             $task = $this->findTask($id);
@@ -100,6 +112,49 @@ class TaskEditor extends Component
         Flux::modal('task-editor')->close();
         $this->dispatch('tasks-changed');
         Flux::toast(text: 'Úloha zmazaná.');
+    }
+
+    public function logTime(): void
+    {
+        $this->validate([
+            'logMinutes' => ['required', 'integer', 'min:1', 'max:1440'],
+            'logDate' => ['required', 'date', 'before_or_equal:today'],
+            'logNote' => ['nullable', 'string', 'max:255'],
+        ], ['logMinutes.required' => 'Zadaj počet minút.']);
+
+        app(TimeTracker::class)->log(
+            $this->findTask($this->taskId),
+            $this->logMinutes,
+            Carbon::parse($this->logDate),
+            $this->logNote ?: null,
+        );
+
+        $this->reset('logMinutes', 'logNote');
+        $this->dispatch('tasks-changed');
+    }
+
+    public function deleteEntry(int $id): void
+    {
+        $this->findTask($this->taskId)->timeEntries()->findOrFail($id)->delete();
+        $this->dispatch('tasks-changed');
+        $this->dispatch('timer-changed');
+    }
+
+    /** @return EloquentCollection<int, TimeEntry> */
+    #[Computed]
+    public function timeEntries(): EloquentCollection
+    {
+        if ($this->taskId === null) {
+            return new EloquentCollection;
+        }
+
+        return $this->findTask($this->taskId)->timeEntries()->latest('started_at')->limit(30)->get();
+    }
+
+    #[Computed]
+    public function trackedSeconds(): int
+    {
+        return $this->taskId === null ? 0 : (int) $this->findTask($this->taskId)->timeEntries()->sum('seconds');
     }
 
     /** @return Collection<int, Project> */

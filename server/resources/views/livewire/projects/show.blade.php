@@ -21,7 +21,7 @@
 
     <div class="flex flex-col gap-2">
         @forelse ($this->openTasks as $task)
-            <x-task-row :task="$task" wire:key="open-{{ $task->id }}" />
+            <x-task-row :task="$task" :running="$this->runningEntry" wire:key="open-{{ $task->id }}" />
         @empty
             <flux:text>Žiadne otvorené úlohy.</flux:text>
         @endforelse
@@ -31,7 +31,7 @@
         <div class="flex flex-col gap-2">
             <flux:heading>Hotové</flux:heading>
             @foreach ($this->doneTasks as $task)
-                <x-task-row :task="$task" :show-priority="false" wire:key="done-{{ $task->id }}" />
+                <x-task-row :task="$task" :running="$this->runningEntry" :show-priority="false" wire:key="done-{{ $task->id }}" />
             @endforeach
         </div>
     @endif

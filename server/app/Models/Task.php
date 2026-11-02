@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -22,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property int $position
  * @property int|null $estimate_minutes
  * @property Carbon|null $completed_at
+ * @property int|string|null $tracked_seconds only with scopeWithTrackedTime()
  */
 #[Fillable(['project_id', 'title', 'notes', 'due_date', 'estimate_minutes'])]
 class Task extends Model
@@ -57,6 +59,18 @@ class Task extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    /** @return HasMany<TimeEntry, $this> */
+    public function timeEntries(): HasMany
+    {
+        return $this->hasMany(TimeEntry::class);
+    }
+
+    /** @param  Builder<self>  $query */
+    public function scopeWithTrackedTime(Builder $query): void
+    {
+        $query->withSum('timeEntries as tracked_seconds', 'seconds');
     }
 
     /** @param  Builder<self>  $query */

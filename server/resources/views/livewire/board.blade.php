@@ -21,7 +21,7 @@
                 <div class="flex min-h-16 flex-col gap-2"
                     wire:sort="sort" wire:sort:group="board" wire:sort:group-id="{{ $priority->value }}">
                     @foreach ($column as $task)
-                        <x-task-row :task="$task" :show-priority="false"
+                        <x-task-row :task="$task" :running="$this->runningEntry" :show-priority="false"
                             wire:key="card-{{ $task->id }}" wire:sort:item="{{ $task->id }}" class="cursor-grab">
                             <div class="flex flex-col opacity-40 group-hover:opacity-100" wire:sort:ignore>
                                 <flux:button size="xs" variant="ghost" icon="chevron-up" wire:click="moveUp({{ $task->id }})" aria-label="Vyššie" />

@@ -22,6 +22,7 @@ class Board extends Component
     {
         $tasks = Auth::user()->tasks()->open()
             ->with('project.company')
+            ->withTrackedTime()
             ->orderBy('position')
             ->orderBy('id')
             ->get()

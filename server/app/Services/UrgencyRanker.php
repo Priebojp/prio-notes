@@ -33,6 +33,7 @@ class UrgencyRanker
         return $user->tasks()
             ->open()
             ->with('project.company')
+            ->withTrackedTime()
             ->get()
             ->sortBy(function (Task $task) use ($today, $soon) {
                 $tier = $this->tier($task, $today, $soon);

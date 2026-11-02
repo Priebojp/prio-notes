@@ -5,7 +5,9 @@ namespace App\Livewire\Concerns;
 use App\Enums\Priority;
 use App\Exceptions\PriorityFullException;
 use App\Models\Task;
+use App\Models\TimeEntry;
 use App\Services\PriorityBoard;
+use App\Services\TimeTracker;
 use Closure;
 use Flux\Flux;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -14,8 +16,8 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 
 /**
- * Shared task actions for pages that list tasks, including the
- * "column is full, what moves down?" dialog.
+ * Shared task actions for pages that list tasks: completing, ordering,
+ * timers, and the "column is full, what moves down?" dialog.
  *
  * Views using this trait must include livewire.partials.priority-conflict.
  */
@@ -30,15 +32,38 @@ trait InteractsWithTasks
     public ?int $demoteId = null;
 
     #[On('tasks-changed')]
+    #[On('timer-changed')]
     public function refreshTasks(): void
     {
-        // Re-render only.
+        unset($this->runningEntry);
     }
 
     public function complete(int $id): void
     {
-        $this->board()->complete($this->findTask($id));
+        $task = $this->findTask($id);
+
+        app(TimeTracker::class)->stopTask($task);
+        $this->board()->complete($task);
         $this->dispatch('tasks-changed');
+        $this->dispatch('timer-changed');
+    }
+
+    public function startTimer(int $id): void
+    {
+        app(TimeTracker::class)->start($this->findTask($id));
+        $this->dispatch('timer-changed');
+    }
+
+    public function stopTimer(): void
+    {
+        app(TimeTracker::class)->stop(Auth::user());
+        $this->dispatch('timer-changed');
+    }
+
+    #[Computed]
+    public function runningEntry(): ?TimeEntry
+    {
+        return app(TimeTracker::class)->running(Auth::user());
     }
 
     public function reopen(int $id): void

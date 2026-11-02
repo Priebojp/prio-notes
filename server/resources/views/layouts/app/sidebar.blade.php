@@ -17,6 +17,9 @@
                 <flux:sidebar.item icon="queue-list" :href="route('board')" :current="request()->routeIs('board')" wire:navigate>
                     Priority
                 </flux:sidebar.item>
+                <flux:sidebar.item icon="clock" :href="route('time')" :current="request()->routeIs('time')" wire:navigate>
+                    Čas
+                </flux:sidebar.item>
                 <flux:sidebar.item icon="building-office" :href="route('projects.index')" :current="request()->routeIs('projects.index')" wire:navigate>
                     Firmy a projekty
                 </flux:sidebar.item>
@@ -98,6 +101,7 @@
         {{ $slot }}
 
         <livewire:task-editor />
+        <livewire:running-timer />
 
         @persist('toast')
             <flux:toast.group>

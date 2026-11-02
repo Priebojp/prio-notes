@@ -30,7 +30,7 @@
 
     <div class="flex flex-col gap-2">
         @forelse ($this->tasks as $task)
-            <x-task-row :task="$task" wire:key="now-{{ $task->id }}" />
+            <x-task-row :task="$task" :running="$this->runningEntry" wire:key="now-{{ $task->id }}" />
         @empty
             <flux:callout icon="sparkles" heading="Nič urgentné">Všetko hotové. Pridaj úlohu hore.</flux:callout>
         @endforelse

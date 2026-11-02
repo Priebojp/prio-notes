@@ -32,7 +32,7 @@ class Show extends Component
     #[Computed]
     public function openTasks(): Collection
     {
-        return $this->project->tasks()->open()->with('project.company')
+        return $this->project->tasks()->open()->with('project.company')->withTrackedTime()
             ->orderBy('priority')->orderBy('position')->get();
     }
 
@@ -40,7 +40,7 @@ class Show extends Component
     #[Computed]
     public function doneTasks(): Collection
     {
-        return $this->project->tasks()->done()->with('project.company')
+        return $this->project->tasks()->done()->with('project.company')->withTrackedTime()
             ->latest('completed_at')->limit(20)->get();
     }
 

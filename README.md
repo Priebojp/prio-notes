@@ -20,6 +20,10 @@ php artisan migrate --seed   # demo user: test@example.com / password
 composer run dev             # http://localhost:8000
 ```
 
+Flux Pro is required: Composer needs credentials for `composer.fluxui.dev`
+(locally in `~/.config/composer/auth.json`; on Forge add them under the site's
+Composer credentials before the first deploy).
+
 Tests: `./vendor/bin/pest` · static analysis: `./vendor/bin/phpstan analyse`
 
 ## Priority rules
@@ -35,7 +39,7 @@ All priority changes go through `App\Services\PriorityBoard`:
 ## Roadmap
 
 1. ✅ Companies, projects, tasks, priority board
-2. Time tracking
+2. ✅ Time tracking (one running timer, manual entries, weekly/monthly report)
 3. Meetings: record → transcribe (ElevenLabs Scribe, sk/cs) → minutes + suggested tasks (Claude)
 4. Daily e-mail digest
 5. NativePHP Android app (tasks, timer, recording)

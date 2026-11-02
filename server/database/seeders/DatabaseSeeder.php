@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\Priority;
 use App\Models\User;
 use App\Services\PriorityBoard;
+use App\Services\TimeTracker;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,7 +16,7 @@ class DatabaseSeeder extends Seeder
     /**
      * Local demo data. Log in as test@example.com / password.
      */
-    public function run(PriorityBoard $board): void
+    public function run(PriorityBoard $board, TimeTracker $tracker): void
     {
         $user = User::factory()->create([
             'name' => 'Test User',
@@ -44,5 +45,11 @@ class DatabaseSeeder extends Seeder
             $task->save();
             $board->place($task, $priority);
         }
+
+        $tasks = $user->tasks()->get()->keyBy('title');
+        $tracker->log($tasks['Opraviť chybu v objednávkach'], 95, today()->subDay(), 'Analýza logov');
+        $tracker->log($tasks['Opraviť chybu v objednávkach'], 40, today());
+        $tracker->log($tasks['Code review PR od kolegu'], 30, today()->subDays(2));
+        $tracker->log($tasks['Nasadiť novú verziu webu'], 50, today()->subDay());
     }
 }
