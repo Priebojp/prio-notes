@@ -2,14 +2,12 @@
 
 namespace App\Livewire\Meetings;
 
-use App\Meetings\MeetingPipeline;
-use App\Models\Meeting;
+use App\Meetings\MeetingRecorder;
 use App\Models\Project;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
@@ -49,10 +47,10 @@ class Create extends Component
             ->sortBy(fn (Project $p) => $p->company->name.' '.$p->name);
     }
 
-    public function save(MeetingPipeline $pipeline): void
+    public function save(MeetingRecorder $recorder): void
     {
         $this->validate([
-            'audio' => ['required', 'file', 'max:'.config('meetings.max_upload_mb') * 1024, 'mimetypes:audio/*,video/webm,video/mp4,video/ogg'],
+            'audio' => MeetingRecorder::audioRules(),
             'title' => ['nullable', 'string', 'max:255'],
             'projectId' => ['nullable', Rule::exists('projects', 'id')->where('user_id', Auth::id())],
             'language' => ['nullable', Rule::in(array_keys(config('meetings.languages')))],
@@ -64,29 +62,7 @@ class Create extends Component
             'consent.accepted' => 'Bez súhlasu účastníkov poradu neukladaj.',
         ]);
 
-        $heldAt = Carbon::parse($this->heldAt);
-
-        $meeting = Auth::user()->meetings()->create([
-            'title' => filled($this->title) ? $this->title : Meeting::defaultTitle($heldAt),
-            'project_id' => $this->projectId,
-            'held_at' => $heldAt,
-            'language' => $this->language ?: null,
-        ]);
-
-        $extension = $this->audio->guessExtension() ?: ($this->audio->getClientOriginalExtension() ?: 'bin');
-        $path = $this->audio->storeAs(
-            'meetings/'.Auth::id(),
-            $meeting->id.'-'.Str::lower(Str::random(10)).'.'.$extension,
-            Meeting::disk(),
-        );
-
-        $meeting->forceFill([
-            'audio_path' => $path,
-            'audio_mime' => $this->audio->getMimeType(),
-            'audio_size' => $this->audio->getSize(),
-        ])->save();
-
-        $pipeline->process($meeting);
+        $meeting = $recorder->store(Auth::user(), $this->audio, Carbon::parse($this->heldAt), $this->title, $this->projectId, $this->language);
 
         $this->redirectRoute('meetings.show', $meeting, navigate: true);
     }

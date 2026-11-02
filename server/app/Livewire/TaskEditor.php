@@ -81,19 +81,20 @@ class TaskEditor extends Component
             'estimateMinutes' => ['nullable', 'integer', 'min:1', 'max:10000'],
         ]);
 
-        $task = $this->taskId ? $this->findTask($this->taskId) : new Task;
-        $task->forceFill(['user_id' => Auth::id()])->fill([
+        $attributes = [
             'title' => $data['title'],
             'notes' => $data['notes'] ?: null,
             'project_id' => $data['projectId'],
             'due_date' => $data['dueDate'],
             'estimate_minutes' => $data['estimateMinutes'],
-        ]);
-        if (! $task->exists) {
-            // New tasks start at the bottom of the backlog and are placed below.
-            $task->position = Auth::user()->tasks()->open()->where('priority', Priority::Backlog)->count();
+        ];
+
+        if ($this->taskId) {
+            $task = $this->findTask($this->taskId);
+            $task->update($attributes);
+        } else {
+            $task = $this->board()->createInBacklog(Auth::user(), $attributes);
         }
-        $task->save();
 
         Flux::modal('task-editor')->close();
 

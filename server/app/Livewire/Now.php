@@ -52,11 +52,7 @@ class Now extends Component
             'quickPriority' => ['required', 'integer', 'between:1,4'],
         ], ['quickTitle.required' => 'Napíš, čo treba spraviť.']);
 
-        $task = new Task(['title' => $this->quickTitle]);
-        $task->forceFill([
-            'user_id' => Auth::id(),
-            'position' => Auth::user()->tasks()->open()->where('priority', Priority::Backlog)->count(),
-        ])->save();
+        $task = $this->board()->createInBacklog(Auth::user(), ['title' => $this->quickTitle]);
 
         $this->reset('quickTitle');
         $this->attempt(fn () => $this->board()->place($task, Priority::from($this->quickPriority)));

@@ -8,7 +8,6 @@ use App\Livewire\Concerns\InteractsWithTasks;
 use App\Meetings\MeetingPipeline;
 use App\Models\Meeting;
 use App\Models\MeetingActionItem;
-use App\Models\Task;
 use Flux\Flux;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -105,17 +104,13 @@ class Show extends Component
         $context = 'Z porady „'.$this->meeting->title.'“ ('.$this->meeting->held_at->translatedFormat('j. n. Y').')'
             .($item->owner ? '. Zodpovedný: '.$item->owner : '').'.';
 
-        $task = new Task([
+        $task = $this->board()->createInBacklog(Auth::user(), [
             'title' => $data['title'],
             'notes' => trim(($item->notes ? $item->notes."\n\n" : '').$context),
             'project_id' => $this->meeting->project_id,
             'meeting_id' => $this->meeting->id,
             'due_date' => $data['due_date'] ?: null,
         ]);
-        $task->forceFill([
-            'user_id' => Auth::id(),
-            'position' => Auth::user()->tasks()->open()->where('priority', Priority::Backlog)->count(),
-        ])->save();
 
         $item->update([
             'title' => $data['title'],

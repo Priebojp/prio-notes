@@ -36,6 +36,24 @@ class PriorityBoard
     }
 
     /**
+     * Create a task at the bottom of the backlog; follow with place() to give
+     * it a real priority (which may need the "what moves down" choice).
+     *
+     * @param  array<string, mixed>  $attributes  fillable task attributes
+     */
+    public function createInBacklog(User $user, array $attributes): Task
+    {
+        $task = new Task($attributes);
+        $task->forceFill([
+            'user_id' => $user->id,
+            'priority' => Priority::Backlog,
+            'position' => $user->tasks()->open()->where('priority', Priority::Backlog)->count(),
+        ])->save();
+
+        return $task;
+    }
+
+    /**
      * Put a task into a priority column at the given index (end of the column
      * when null). Moving within the same column just reorders it.
      *
