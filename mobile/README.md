@@ -15,7 +15,7 @@ upload for transcription). The token is kept in the OS keystore when
 - `.env`:
   ```
   NATIVEPHP_APP_ID=sk.prieboj.prionotes
-  PRIO_SERVER_URL=https://note.prieboj.sk   # emulator against local server: http://10.0.2.2:8000
+  PRIO_SERVER_URL=https://note.prieboj.sk   # fixed per build; emulator against a local server: http://10.0.2.2:8000
   ```
 
 ```bash

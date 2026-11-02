@@ -6,7 +6,7 @@
     </div>
 
     <form wire:submit="login" class="space-y-4">
-        @foreach ([['serverUrl', 'Server', 'url', 'https://note.prieboj.sk'], ['email', 'E-mail', 'email', ''], ['password', 'Heslo', 'password', '']] as [$field, $label, $type, $placeholder])
+        @foreach ([['email', 'E-mail', 'email', ''], ['password', 'Heslo', 'password', '']] as [$field, $label, $type, $placeholder])
             <label class="block">
                 <span class="mb-1 block text-sm font-medium">{{ $label }}</span>
                 <input type="{{ $type }}" wire:model="{{ $field }}" placeholder="{{ $placeholder }}" autocapitalize="off" autocomplete="{{ $field === 'password' ? 'current-password' : 'off' }}"

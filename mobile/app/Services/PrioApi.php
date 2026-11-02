@@ -15,9 +15,9 @@ class PrioApi
     /**
      * @return array{token: string, user: array{name: string, email: string}}|array{two_factor: true}
      */
-    public function login(string $serverUrl, string $email, string $password, ?string $code = null): array
+    public function login(string $email, string $password, ?string $code = null): array
     {
-        $response = Http::baseUrl(rtrim($serverUrl, '/').'/api')
+        $response = Http::baseUrl($this->account->serverUrl().'/api')
             ->acceptJson()
             ->timeout(20)
             ->post('tokens', array_filter([

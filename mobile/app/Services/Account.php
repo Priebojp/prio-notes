@@ -8,7 +8,8 @@ use Native\Mobile\Facades\SecureStorage;
 use Throwable;
 
 /**
- * Who is signed in on this phone and where the server is.
+ * Who is signed in on this phone. The server address is fixed per build
+ * (PRIO_SERVER_URL in .env).
  *
  * The API token goes to the OS keystore (SecureStorage) when the device
  * supports it, otherwise it is kept encrypted in the app's private database.
@@ -19,7 +20,7 @@ class Account
 
     public function serverUrl(): string
     {
-        return rtrim($this->get('server_url') ?? (string) config('services.prio.url'), '/');
+        return rtrim((string) config('services.prio.url'), '/');
     }
 
     public function userName(): ?string
@@ -48,9 +49,8 @@ class Account
         return filled($this->token());
     }
 
-    public function signIn(string $serverUrl, string $token, string $userName): void
+    public function signIn(string $token, string $userName): void
     {
-        $this->put('server_url', rtrim($serverUrl, '/'));
         $this->put('user_name', $userName);
 
         $stored = false;

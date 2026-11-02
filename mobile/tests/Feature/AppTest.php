@@ -15,9 +15,11 @@ uses(RefreshDatabase::class);
 
 const SERVER = 'http://prio.test';
 
+beforeEach(fn () => config(['services.prio.url' => SERVER.'/']));
+
 function signIn(): void
 {
-    app(Account::class)->signIn(SERVER, 'tok-123', 'Peter');
+    app(Account::class)->signIn('tok-123', 'Peter');
 }
 
 function nowPayload(array $tasks = [], ?array $running = null): array
@@ -59,7 +61,6 @@ it('logs in against the server, asking for a 2FA code when needed', function () 
     ]);
 
     Livewire::test(Login::class)
-        ->set('serverUrl', SERVER)
         ->set('email', 'p@x.sk')
         ->set('password', 'secret')
         ->call('login')

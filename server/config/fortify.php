@@ -161,7 +161,8 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        // Personal app: open sign-up only while creating your own account.
+        ...(env('REGISTRATION_ENABLED', false) ? [Features::registration()] : []),
         Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([

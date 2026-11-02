@@ -12,8 +12,6 @@ use Throwable;
 #[Layout('layouts.app')]
 class Login extends Component
 {
-    public string $serverUrl = '';
-
     public string $email = '';
 
     public string $password = '';
@@ -24,15 +22,9 @@ class Login extends Component
 
     public ?string $error = null;
 
-    public function mount(Account $account): void
-    {
-        $this->serverUrl = $account->serverUrl();
-    }
-
     public function login(PrioApi $api, Account $account): void
     {
         $this->validate([
-            'serverUrl' => ['required', 'url'],
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
@@ -40,7 +32,7 @@ class Login extends Component
         $this->error = null;
 
         try {
-            $result = $api->login($this->serverUrl, $this->email, $this->password, $this->needsCode ? $this->code : null);
+            $result = $api->login($this->email, $this->password, $this->needsCode ? $this->code : null);
         } catch (Throwable $e) {
             $this->error = $e->getMessage();
 
@@ -53,7 +45,7 @@ class Login extends Component
             return;
         }
 
-        $account->signIn($this->serverUrl, $result['token'], $result['user']['name']);
+        $account->signIn($result['token'], $result['user']['name']);
         $this->redirectRoute('now', navigate: true);
     }
 
